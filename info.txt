@@ -1,0 +1,123 @@
+https://medium.com/icnh/a-star-rating-widget-for-flutter-41560f82c8cb
+https://stackoverflow.com/questions/46637566/how-to-create-rating-star-bar-properly
+
+
+
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class BuildingProblem {
+  static List<Icon> problemListIcons = [];
+  static List<String> problemListNames = [];
+}
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+  int _selectedColorIndex = 0;
+  double itemExtent = 40.0;
+  FixedExtentScrollController scrollController;
+
+  void _incrementCounter() {
+    scrollController.animateTo(itemExtent,
+        duration: Duration(milliseconds: 200), curve: Curves.ease);
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  void initState() {
+    scrollController =
+        FixedExtentScrollController(initialItem: _selectedColorIndex);
+
+    BuildingProblem.problemListIcons.add(Icon(Icons.add));
+    BuildingProblem.problemListIcons.add(Icon(Icons.cast));
+    BuildingProblem.problemListIcons.add(Icon(Icons.link));
+    BuildingProblem.problemListNames.add("add");
+    BuildingProblem.problemListNames.add("cast");
+    BuildingProblem.problemListNames.add("link");
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: CupertinoPicker(
+                scrollController: scrollController,
+                itemExtent: itemExtent,
+                children: <Widget>[
+                  for (var i = 0;
+                      i < BuildingProblem.problemListIcons.length;
+                      i++)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        BuildingProblem.problemListIcons[i],
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            BuildingProblem.problemListNames[i],
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        )
+                      ],
+                    ),
+                ],
+                onSelectedItemChanged: (int index) {
+                  print('good boi');
+                },
+                looping: true,
+                backgroundColor: Color(0xff2e3032),
+              ),
+            ),
+            Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.display1,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
